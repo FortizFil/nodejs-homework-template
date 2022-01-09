@@ -1,5 +1,5 @@
 const { Conflict } = require("http-errors");
-
+const gravatar = require("gravatar");
 const { User } = require("../../models");
 
 const register = async (req, res) => {
@@ -9,7 +9,10 @@ const register = async (req, res) => {
   if (user) {
     throw new Conflict(`User with ${email} already exist`);
   }
-  const newUser = new User({ email });
+
+  const avatarURL = gravatar.url(email);
+
+  const newUser = new User({ email, avatarURL });
 
   newUser.setPassword(password);
 
@@ -22,6 +25,7 @@ const register = async (req, res) => {
       user: {
         email,
         subscription,
+        avatarURL,
       },
     },
   });
